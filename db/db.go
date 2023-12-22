@@ -48,7 +48,6 @@ func createTables() {
 			FOREIGN KEY(user_id) REFERENCES users(id)
 		)	`
 
-
 	_, err = DB.Exec(createEventsTable)
 	if err != nil {
 		panic("Failed to create events table")
