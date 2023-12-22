@@ -6,10 +6,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/IvanOrsh/go-rest-event-booking/db"
 	"github.com/IvanOrsh/go-rest-event-booking/models"
 )
 
 func main() {
+	db.InitDB()
+
 	server := gin.Default()
 
 	server.GET("/events", getEvents)
@@ -25,7 +28,7 @@ func getEvents(c *gin.Context) {
 		http.StatusOK,
 		gin.H{
 			"message": "events retrieved",
-			"data": events,
+			"data":    events,
 		})
 }
 
@@ -37,7 +40,7 @@ func createEvent(c *gin.Context) {
 			http.StatusBadRequest,
 			gin.H{
 				"message": "could not parse request data",
-				"error": err.Error(),
+				"error3":  err.Error(),
 			})
 		return
 	}
@@ -46,6 +49,7 @@ func createEvent(c *gin.Context) {
 	event.UserID = 1
 
 	event.Save()
+
 	c.JSON(
 		http.StatusCreated,
 		gin.H{

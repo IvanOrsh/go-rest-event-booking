@@ -33,3 +33,6 @@ out/
 
 # Build output
 /bin/
+
+#dbs
+api.db
