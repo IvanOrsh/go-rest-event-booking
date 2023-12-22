@@ -1,0 +1,9 @@
+GET http://localhost:8080/events/1 HTTP/1.1
+
+###
+
+GET http://localhost:8080/events/101 HTTP/1.1
+
+### 
+
+GET http://localhost:8080/events/abc HTTP/1.1
