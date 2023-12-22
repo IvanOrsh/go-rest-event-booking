@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/IvanOrsh/go-rest-event-booking/models"
+	"github.com/IvanOrsh/go-rest-event-booking/utils"
 )
 
 func getEvents(c *gin.Context) {
@@ -62,14 +63,38 @@ func getEvent(c *gin.Context) {
 }
 
 func createEvent(c *gin.Context) {
+	// check whether the token exists
+	token := c.Request.Header.Get("Authorization")
+	if token == "" {
+		c.JSON(
+			http.StatusUnauthorized,
+			gin.H{
+				"message": "unauthorized",
+				"error":   "no token provided",
+			})
+		return
+	}
+
+	// check whether the token is valid
+	err := utils.VerifyToken(token)
+	if err != nil {
+		c.JSON(
+			http.StatusUnauthorized,
+			gin.H{
+				"message": "unauthorized",
+				"error":   err.Error(),
+			})
+		return
+	}
+
 	var event models.Event
-	err := c.ShouldBindJSON(&event)
+	err = c.ShouldBindJSON(&event)
 	if err != nil {
 		c.JSON(
 			http.StatusBadRequest,
 			gin.H{
 				"message": "could not parse request data",
-				"error3":  err.Error(),
+				"error":   err.Error(),
 			})
 		return
 	}
