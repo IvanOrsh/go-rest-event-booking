@@ -1,10 +1,20 @@
 @baseUrl = http://localhost:8080
 
-GET {{baseUrl}}/events HTTP/1.1
+# @name login
+POST {{baseUrl}}/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "test2@email.com",
+  "password": "never ever"
+}
+
 
 ###
+@authToken = {{login.response.body.token}}
 
 POST {{baseUrl}}/events HTTP/1.1
+Authorization: {{authToken}}
 Content-Type: application/json
 
 {
@@ -17,3 +27,8 @@ Content-Type: application/json
 ###
 
 DELETE {{baseUrl}}/events/4 HTTP/1.1
+Authorization: {{authToken}}
+
+###
+
+GET {{baseUrl}}/events HTTP/1.1

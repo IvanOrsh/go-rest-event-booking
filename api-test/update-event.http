@@ -1,4 +1,20 @@
+@baseUrl = http://localhost:8080
+
+# @name login
+POST {{baseUrl}}/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "test2@email.com",
+  "password": "never ever"
+}
+
+### 
+
+@authToken = {{login.response.body.token}}
+
 PUT http://localhost:8080/events/1 HTTP/1.1
+Authorization: {{authToken}}
 Content-Type: application/json
 
 {
@@ -8,7 +24,7 @@ Content-Type: application/json
   "dateTime": "2027-01-01T15:30:00Z"
 }
 
-###
+### unauthorized
 
 PUT http://localhost:8080/events/201 HTTP/1.1
 Content-Type: application/json
