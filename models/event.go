@@ -15,7 +15,7 @@ type Event struct {
 	UserID      int64
 }
 
-func (e Event) Save() error {
+func (e *Event) Save() error {
 	query := `
 		INSERT INTO events (
 			name, description, location, dateTime, user_id
@@ -99,7 +99,7 @@ func Update(event Event) error {
 	return err
 }
 
-func (e Event) Delete() error {
+func (e *Event) Delete() error {
 	query := `
 		DELETE FROM events
 		WHERE id = ?
