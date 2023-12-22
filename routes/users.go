@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/IvanOrsh/go-rest-event-booking/models"
+	"github.com/IvanOrsh/go-rest-event-booking/utils"
 )
 
 func signup(c *gin.Context) {
@@ -65,13 +66,22 @@ func login(c *gin.Context) {
 		return
 	}
 
-	// TODO: return JWT
+	token, err := utils.GenerateToken(user.Email, user.ID)
+	if err != nil {
+		c.JSON(
+			http.StatusInternalServerError,
+			gin.H{
+				"message": "could not generate token",
+				"error":   err.Error(),
+			})
+		return
+	}
+
 	c.JSON(
 		http.StatusOK,
 		gin.H{
-			"message": "login successful",
-			"data":    user,
+			"message": "user logged in",
+			"token":   token,
 		},
 	)
-
 }
