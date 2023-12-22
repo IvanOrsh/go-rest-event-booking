@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -22,7 +21,16 @@ func main() {
 }
 
 func getEvents(c *gin.Context) {
-	events := models.GetAllEvents()
+	events, err := models.GetAllEvents()
+	if err != nil {
+		c.JSON(
+			http.StatusInternalServerError,
+			gin.H{
+				"message": "could not retrieve events",
+				"error":   err.Error(),
+			})
+		return
+	}
 
 	c.JSON(
 		http.StatusOK,
@@ -44,11 +52,18 @@ func createEvent(c *gin.Context) {
 			})
 		return
 	}
-
-	event.ID = fmt.Sprintf("%d", len(models.GetAllEvents())+1)
 	event.UserID = 1
 
-	event.Save()
+	err = event.Save()
+	if err != nil {
+		c.JSON(
+			http.StatusInternalServerError,
+			gin.H{
+				"message": "could not create event",
+				"error":   err.Error(),
+			})
+		return
+	}
 
 	c.JSON(
 		http.StatusCreated,
