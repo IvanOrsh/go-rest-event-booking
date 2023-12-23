@@ -9,31 +9,31 @@ import (
 )
 
 func Authenticate(c *gin.Context) {
-		// check whether the token exists
-		token := c.Request.Header.Get("Authorization")
-		if token == "" {
-			c.AbortWithStatusJSON(
-				http.StatusUnauthorized,
-				gin.H{
-					"message": "unauthorized",
-					"error":   "no token provided",
-				})
-			return
-		}
-	
-		// check whether the token is valid
-		userId, err := utils.VerifyToken(token)
-		if err != nil {
-			c.AbortWithStatusJSON(
-				http.StatusUnauthorized,
-				gin.H{
-					"message": "unauthorized",
-					"error":   err.Error(),
-				})
-			return
-		}
+	// check whether the token exists
+	token := c.Request.Header.Get("Authorization")
+	if token == "" {
+		c.AbortWithStatusJSON(
+			http.StatusUnauthorized,
+			gin.H{
+				"message": "unauthorized",
+				"error":   "no token provided",
+			})
+		return
+	}
 
-		c.Set("userId", userId)
+	// check whether the token is valid
+	userId, err := utils.VerifyToken(token)
+	if err != nil {
+		c.AbortWithStatusJSON(
+			http.StatusUnauthorized,
+			gin.H{
+				"message": "unauthorized",
+				"error":   err.Error(),
+			})
+		return
+	}
 
-		c.Next()
+	c.Set("userId", userId)
+
+	c.Next()
 }
