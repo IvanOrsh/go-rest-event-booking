@@ -109,7 +109,10 @@ func updateEvent(c *gin.Context) {
 		return
 	}
 
-	_, err = models.GetEventByID(id)
+	// now we care about event (specifically, event.userID)
+	// get user id from auth middleware
+	event, err := models.GetEventByID(id)
+	userID := c.GetInt64("userId")
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
@@ -118,6 +121,15 @@ func updateEvent(c *gin.Context) {
 				"error":   err.Error(),
 			})
 		return
+	}
+	// only the user who created the event can update it
+	if event.UserID != userID {
+		c.JSON(
+			http.StatusForbidden,
+			gin.H{
+				"message": "you are not authorized to update this event",
+			})
+		return		
 	}
 
 	var updatedEvent models.Event
